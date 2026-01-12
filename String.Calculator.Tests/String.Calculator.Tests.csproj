@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StringCalculatore-Core\StringCalculatore.Core.csproj" />
+    <ProjectReference Include="..\StringCalculatore-Core\StringCalculator.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
