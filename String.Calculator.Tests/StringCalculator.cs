@@ -62,5 +62,12 @@
             Assert.Equal(8, calc.add("2,1001,6"));
 
         }
+        [Fact]
+        public void Add_CustomSingleCharDelimeter_Returns_Sum()
+        {
+            var calc = new StringCalculator.Core.StringCalculator();
+            Assert.Equal(7, calc.add("//#\n2#5"));
+            Assert.Equal(3, calc.add("//#\n1#2"));
+        }
     }
 }

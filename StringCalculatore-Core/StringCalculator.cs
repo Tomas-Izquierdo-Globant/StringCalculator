@@ -8,7 +8,20 @@
             if (string.IsNullOrWhiteSpace(input))
                 return 0;
 
-            string[] partes = input.Split(new char[] {',', '\n' });
+            char[] delimitadores = new char[] {',','\n'};
+
+            if (input.StartsWith("//"))
+            {
+                char customDelimeter = input[2];
+            
+
+                delimitadores = new char[] {customDelimeter };
+
+                input = input.Substring(4);
+            }
+
+            string[] partes = input.Split(delimitadores);
+
             int suma = 0;
             List<int> negativos = new List<int>();
             foreach (var parte in partes) 
