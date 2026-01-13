@@ -69,5 +69,23 @@
             Assert.Equal(7, calc.add("//#\n2#5"));
             Assert.Equal(3, calc.add("//#\n1#2"));
         }
+        [Fact]
+        public void Add_WhiteSpace_ReturnsZero()
+        {
+            var calc = new StringCalculator.Core.StringCalculator();
+            Assert.Equal(0, calc.add("     "));
+        }
+        [Fact]
+        public void Add_stringVariety_ReturnsSum()
+        {
+            var calc = new StringCalculator.Core.StringCalculator();
+            Assert.Equal(0, calc.add(""));
+            Assert.Equal(6, calc.add("1,2\n3"));
+            Assert.Equal(8, calc.add("2,1001,6"));
+            Assert.Equal(7, calc.add("//#\n2#5"));
+            Assert.Equal(66, calc.add("//[***]\n11***22***33"));
+            Assert.Equal(6, calc.add("//[*][%]\n1*2%3"));
+            var ex = Assert.Throws<ArgumentException>(() => calc.add("1,-2,3"));
+        }
     }
 }
