@@ -12,6 +12,8 @@ namespace StringCalculator.Core
         private readonly bool _allowNegativeNumber;
         private readonly CalculatorSettings _settings;
         private readonly string _StartsWith;
+        private  string[] _numberStrings;
+
 
         public StringCalculator(IOptions<CalculatorSettings> settings)
         {
@@ -19,7 +21,7 @@ namespace StringCalculator.Core
             _delimeters = new List<string>(_settings.defaultDelimiters);
             _maxNumber = _settings.maxNumber;
             _allowNegativeNumber = _settings.AllowNegativeNumbers;
-            _StartsWith = _settings.StartsWith; 
+            _StartsWith = _settings.StartsWith;
         }
 
         public void addCustomDelimeter(string customDelimeter)
@@ -92,8 +94,26 @@ namespace StringCalculator.Core
             {
                 throw new ArgumentException("números negativos no permitidos: " + string.Join(", ", negativos));
             }
+            this._numberStrings = numberStrings;
             return suma;
         }
+
+
+
+        public CalculationResult addWithFormula(string numbers)
+        {
+            var suma = this.add(numbers);
+            var numberString = this._numberStrings;
+
+            var usedNumbers = numberString.Select(p => int.TryParse(p, out int n) && n <= _maxNumber ? n : 0).ToList();
+            var formula = string.Join("+", usedNumbers);
+            var result = usedNumbers.Sum();
+
+            return new CalculationResult($"{formula} = {result}", result);
+        }
+
+
+        public record CalculationResult(string Formula, int Result);
 
     }
 }
