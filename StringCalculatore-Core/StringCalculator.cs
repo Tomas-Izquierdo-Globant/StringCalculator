@@ -1,61 +1,94 @@
-﻿using System.Text.RegularExpressions;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using StringCalculator_Core;
+using System.Text.RegularExpressions;
 
 namespace StringCalculator.Core
 {
     public class StringCalculator
     {
-        public int add(string input)
+        private readonly List<string> _delimeters;
+        private readonly int _maxNumber;
+        private readonly bool _allowNegativeNumber;
+        private readonly CalculatorSettings _settings;
+        private readonly string _StartsWith;
+
+        public StringCalculator(IOptions<CalculatorSettings> settings)
+        {
+            _settings = settings.Value;
+            _delimeters = new List<string>(_settings.defaultDelimiters);
+            _maxNumber = _settings.maxNumber;
+            _allowNegativeNumber = _settings.AllowNegativeNumbers;
+            _StartsWith = _settings.StartsWith; 
+        }
+
+        public void addCustomDelimeter(string customDelimeter)
+        { 
+            if (! string.IsNullOrEmpty(customDelimeter))
+                _delimeters.Add(customDelimeter);
+        }
+
+        public int add(string numbers)
         {
 
-            if (string.IsNullOrWhiteSpace(input))
+
+            if (string.IsNullOrWhiteSpace(numbers))
                 return 0;
 
-            List<string> delimitadores = new List<string> { ",", "\n" };
 
-            if (input.StartsWith("//"))
+            if (numbers.StartsWith(_StartsWith))
             {
 
-                delimitadores.Clear();
+                var parts = numbers.Split('\n',2);
 
-                int saltoLinea = input.IndexOf("\n");
+                var customs = parts[0].Substring(2);
 
-                string encabezado = input.Substring(2, saltoLinea - 2);
-
-                var matches = Regex.Matches(encabezado, @"\[(.*?)\]");
+                // soporta //[***] o //[*][%]
+                var matches = Regex.Matches(customs, @"\[(.*?)\]");
 
                 if (matches.Count > 0)
-                    foreach (Match match in matches)
-                    {
-                        delimitadores.Add(match.Groups[1].Value);
-                    }
+                {
+                    foreach (Match m in matches)
+                        addCustomDelimeter(m.Groups[1].Value);
+                }
                 else
                 {
-                    delimitadores.Add(encabezado);
+                    // delimitador simple tipo //;
+                    addCustomDelimeter(customs);
                 }
 
+                numbers = parts.Length > 1 ? parts[1] : "";
 
-                input = input.Substring(saltoLinea + 1);
+
             }
 
-            string[] partes = input.Split(delimitadores.ToArray(), StringSplitOptions.None);
+            var pattern = string.Join("|", _delimeters
+                .OrderByDescending(d=>d.Length)
+                .Select(Regex.Escape));
+
+            var numberStrings = Regex.Split(numbers, pattern);
 
             int suma = 0;
             List<int> negativos = new List<int>();
-            foreach (var parte in partes)
+
+
+
+
+            foreach (var parte in numberStrings)
             {
                 if (int.TryParse(parte, out int numero))
                 {
-                    if (numero < 0)
+                    if (!_allowNegativeNumber && numero < 0)
                     {
                         negativos.Add(numero);
                     }
-                    else if (numero <= 1000)
+                    else if (numero <= _maxNumber)
                         suma += numero;
                 }
 
             }
 
-            if (negativos.Count > 0)
+            if (negativos.Any())
             {
                 throw new ArgumentException("números negativos no permitidos: " + string.Join(", ", negativos));
             }
