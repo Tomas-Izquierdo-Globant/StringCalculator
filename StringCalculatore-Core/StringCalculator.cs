@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using StringCalculator_Core;
+using StringCalculatore_Core;
 using System.Text.RegularExpressions;
 
 namespace StringCalculator.Core
@@ -30,12 +31,12 @@ namespace StringCalculator.Core
                 _delimeters.Add(customDelimeter);
         }
 
-        public int add(string numbers)
+        public int calculate(string numbers, OperationType operation = OperationType.Add)
         {
 
 
             if (string.IsNullOrWhiteSpace(numbers))
-                return 0;
+                return operation == OperationType.Multiply ? 1 : 0;
 
 
             if (numbers.StartsWith(_StartsWith))
@@ -68,9 +69,16 @@ namespace StringCalculator.Core
                 .OrderByDescending(d=>d.Length)
                 .Select(Regex.Escape));
 
+            int result = operation switch
+            {
+                OperationType.Multiply => 1,
+                _ => 0
+            };
+
+
             var numberStrings = Regex.Split(numbers, pattern);
 
-            int suma = 0;
+         
             List<int> negativos = new List<int>();
 
 
@@ -84,8 +92,27 @@ namespace StringCalculator.Core
                     {
                         negativos.Add(numero);
                     }
-                    else if (numero <= _maxNumber)
-                        suma += numero;
+                    else if (numero > _maxNumber) continue;
+
+
+                    switch (operation)
+                    {
+                        case OperationType.Add:
+                            result += numero;
+                            break;
+                        case OperationType.Subtract:
+                            result -= numero;
+                            break;
+                        case OperationType.Multiply:
+                            result *= numero;
+                            break;
+                        case OperationType.Divide:
+                            if (numero != 0) // evitar división por cero
+                                result /= numero;
+                            break;
+                    }
+
+
                 }
 
             }
@@ -95,14 +122,14 @@ namespace StringCalculator.Core
                 throw new ArgumentException("números negativos no permitidos: " + string.Join(", ", negativos));
             }
             this._numberStrings = numberStrings;
-            return suma;
+            return result;
         }
 
 
 
         public CalculationResult addWithFormula(string numbers)
         {
-            var suma = this.add(numbers);
+            var suma = this.calculate(numbers);
             var numberString = this._numberStrings;
 
             var usedNumbers = numberString.Select(p => int.TryParse(p, out int n) && n <= _maxNumber ? n : 0).ToList();

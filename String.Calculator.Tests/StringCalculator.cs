@@ -30,7 +30,7 @@ namespace String.Calculator.Tests
             _input = "";
 
             //act
-            _result = calc.add("");
+            _result = calc.calculate("");
 
             //assert
             Assert.Equal(0, _result);
@@ -46,7 +46,7 @@ namespace String.Calculator.Tests
             _input = "20";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(20, _result);
@@ -62,7 +62,7 @@ namespace String.Calculator.Tests
             _input = "998,1";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(999, _result);
@@ -77,7 +77,7 @@ namespace String.Calculator.Tests
             _input = "5,qwerty";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(5, _result);
@@ -91,7 +91,7 @@ namespace String.Calculator.Tests
             _input = "1,2,3,4,5,6,7,8,9,10,11,12";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(78, _result);
@@ -107,7 +107,7 @@ namespace String.Calculator.Tests
             _input = "1\n2,3";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(6, _result);
@@ -123,7 +123,7 @@ namespace String.Calculator.Tests
             _input = "2,-4,3,-5";
 
             //act
-            var ex = Assert.Throws<ArgumentException>(() => calc.add(_input));
+            var ex = Assert.Throws<ArgumentException>(() => calc.calculate(_input));
 
             //assert
             Assert.Contains("-4", ex.Message);
@@ -139,7 +139,7 @@ namespace String.Calculator.Tests
             _input = "2,1001,6";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(8, _result);
@@ -155,12 +155,12 @@ namespace String.Calculator.Tests
             var _input2 = "//#\n1#2";
 
             //act
-            var _result1 = calc.add(_input1);
-            var _result2 = calc.add(_input2);
+            var _result1 = calc.calculate(_input1);
+            var _result2 = calc.calculate(_input2);
 
             //assert
-            Assert.Equal(_result1, calc.add(_input1));
-            Assert.Equal(_result2, calc.add(_input2));
+            Assert.Equal(_result1, calc.calculate(_input1));
+            Assert.Equal(_result2, calc.calculate(_input2));
         }
         [Fact]
         public void Add_WhiteSpace_ReturnsZero()
@@ -171,7 +171,7 @@ namespace String.Calculator.Tests
             _input = "     ";
 
             //act
-            _result = calc.add(_input);
+            _result = calc.calculate(_input);
 
             //assert
             Assert.Equal(0, _result);
@@ -189,13 +189,13 @@ namespace String.Calculator.Tests
             var _input6 = "";
 
             //act
-            var _result1 = calc.add(_input1);
-            var _result2 = calc.add(_input2);
-            var _result3 = calc.add(_input3);
-            var _result4 = calc.add(_input4);
-            var _result5 = calc.add(_input5);
-            var _result6 = calc.add(_input6);
-            var ex = Assert.Throws<ArgumentException>(() => calc.add("1,-2,3"));
+            var _result1 = calc.calculate(_input1);
+            var _result2 = calc.calculate(_input2);
+            var _result3 = calc.calculate(_input3);
+            var _result4 = calc.calculate(_input4);
+            var _result5 = calc.calculate(_input5);
+            var _result6 = calc.calculate(_input6);
+            var ex = Assert.Throws<ArgumentException>(() => calc.calculate("1,-2,3"));
 
             //assert
             Assert.Equal(6, _result1);

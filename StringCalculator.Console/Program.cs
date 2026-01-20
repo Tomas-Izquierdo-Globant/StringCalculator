@@ -37,7 +37,7 @@ class program
             var input = Console.ReadLine();
             if (input == null) break;
 
-            Console.WriteLine(calculator.add(input));
+            Console.WriteLine(calculator.calculate(input));
         }
 
     }
