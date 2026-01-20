@@ -1,7 +1,8 @@
 ﻿
-using StringCalculator_Core;
-using Xunit.Abstractions;
 using Microsoft.Extensions.Options;
+using StringCalculator_Core;
+using StringCalculatore_Core;
+using Xunit.Abstractions;
 
 namespace String.Calculator.Tests
 {
@@ -205,6 +206,32 @@ namespace String.Calculator.Tests
             Assert.Equal(6, _result5);
             Assert.Equal(0, _result6);
             Assert.Contains("-2", ex.Message);
+
+
+        }
+
+        public void Add_stringVariety_ReturnsOperation()
+        {
+            //arrange
+            var calc = new StringCalculator.Core.StringCalculator(_settings);
+            var _input1 = "2,3,4";
+            var _input2 = "10,3,2";
+            var _input3 = "100,2,5";
+            var _input4 = "2,3,4";
+
+            //act
+            int multi = calc.calculate(_input4, OperationType.Multiply);  // 24 (2*3*4)
+            int div = calc.calculate(_input3, OperationType.Divide);    // 10 (100/2/5)
+            var suma = calc.calculate(_input1, OperationType.Add);
+            int resta = calc.calculate(_input2, OperationType.Subtract); // 5 (10-3-2)
+
+
+            //assert
+            Assert.Equal(9, suma);
+            Assert.Equal(5, resta);
+            Assert.Equal(24, multi);
+            Assert.Equal(10, div);
+
 
 
         }
