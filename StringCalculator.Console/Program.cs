@@ -26,8 +26,18 @@ class program
 
         var calculator = new StringCalculator.Core.StringCalculator(options);
 
-        var result = calculator.add("1,2,3");
-        Console.WriteLine($"Resultado:{result}");
+        //var result = calculator.add("1,2,3");
+        //Console.WriteLine($"Resultado:{result}");
+
+
+        while (true)
+        {
+            Console.Write("> ");
+            var input = Console.ReadLine();
+            if (input == null) break;
+
+            Console.WriteLine(calculator.add(input));
+        }
 
     }
 
