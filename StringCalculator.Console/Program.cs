@@ -7,9 +7,10 @@ using Microsoft.Extensions.Options;
 
 class program
 {
-    static void Main() {
+    static void Main(string[] args) {
         var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
+                .AddCommandLine(args)
                 .AddJsonFile("appsettings.json", optional:false, reloadOnChange:true)
                 .Build();
 
